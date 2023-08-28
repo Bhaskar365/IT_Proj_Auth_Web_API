@@ -40,21 +40,27 @@ namespace IT_Proj_Db_Regis.Controllers
 
         [AllowAnonymous]
         [HttpPost("LoginUser")]
-        public IActionResult Login(Login login) 
+        public async Task<IActionResult> Login(Login login) 
         {
-            var userAvailable = _context.User.Where(u => u.Email == login.Email && u.Pwd == login.Pwd).FirstOrDefaultAsync();
-            if (userAvailable != null) 
+            var userAvailable = await _context.User.FirstOrDefaultAsync(u => u.Email == login.Email && u.Pwd == login.Pwd);
+
+            if (userAvailable != null)
             {
                 return Ok(new JwtClass(configuration).GenerateToken(
-                    userAvailable.Result.UserID.ToString(),
-                    userAvailable.Result.FirstName,
-                    userAvailable.Result.LastName,
-                    userAvailable.Result.Email,
-                    userAvailable.Result.Mobile,
-                    userAvailable.Result.Gender  
-                    ));
+                    userAvailable.UserID.ToString(),
+                    userAvailable.FirstName,
+                    userAvailable.LastName,
+                    userAvailable.Email,
+                    userAvailable.Mobile,
+                    userAvailable.Gender
+                ));
             }
-            return Ok("Failure");
+            else
+            {
+                return Ok("Failure");
+                //return BadRequest("Failure");
+            }
         }
     }
 }
+
