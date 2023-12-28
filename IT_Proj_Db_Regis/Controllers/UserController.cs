@@ -22,7 +22,7 @@ namespace IT_Proj_Db_Regis.Controllers
             this.configuration = configuration;
             this._context = _context;
         }
-
+        //test comment
         [AllowAnonymous]
         [HttpPost("Create")]
         public IActionResult Create(User user) 
